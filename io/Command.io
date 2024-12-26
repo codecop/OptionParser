@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
-OptionParser
+Object do(
+    doc := method(
+        if(call argCount == 1,
+            call target setSlot("docstring", call evalArgAt(0))
+            call target
+        ,
+            call target getSlot("docstring"))
+    )
+)
 
 Command := Object clone do(
     newSlot("body")
