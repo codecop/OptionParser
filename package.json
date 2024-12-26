@@ -1,0 +1,14 @@
+{
+  "name": "OptionParser",
+  "version": "0.1.0",
+  "description": "Command line argument parser for Io language",
+  "author": "Sergei Lebedev",
+  "readme": "README.md",
+  "protos": [ "OptionParser", "Command", "GetOpt", "Option", "OptionList" ],
+  "dependencies": {
+    "libs": [],
+    "headers": [],
+    "protos": [],
+    "packages": []
+  }
+}
