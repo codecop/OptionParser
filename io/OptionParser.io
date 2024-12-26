@@ -5,7 +5,7 @@ GetOpt
 Sequence do(
     trim := method(size,
         if(self size > size,
-            self slice(0, size - 3) .. "..."
+            self exSlice(0, size - 3) .. "..."
         ,
             self)
     )

@@ -108,7 +108,7 @@ GetOpt := Object clone do(
         # to get the option being removed, hopefully this will
         # changed in future.
         opt := optstring at(0) asCharacter
-        optstring = optstring slice(1)
+        optstring = optstring exSlice(1)
 
         if(shortHasArg(opt),
             # If an option requires an argument we extract it either
@@ -177,9 +177,9 @@ GetOpt := Object clone do(
 
             opts append(
                 if(args first beginsWithSeq("--"),
-                    doLong(args first slice(2), args sliceInPlace(1))
+                    doLong(args first exSlice(2), args sliceInPlace(1))
                 ,
-                    doShort(args first slice(1), args sliceInPlace(1))
+                    doShort(args first exSlice(1), args sliceInPlace(1))
                 )
             )
         )
@@ -207,7 +207,7 @@ GetOpt := Object clone do(
         # evidence of the "+" flag being a common solution for disabling
         # GNU argument parsing were found.
         allOptionsFirst := if(shortopts beginsWithSeq("+"),
-            shortopts = shortopts slice(1)
+            shortopts = shortopts exSlice(1)
             true
         ,
             System getEnvironmentVariable("POSIXLY_CORRECT") isNil not
@@ -223,11 +223,11 @@ GetOpt := Object clone do(
 
             if(arg beginsWithSeq("--")) then(
                 opts append(
-                    doLong(arg slice(2), args sliceInPlace(1))
+                    doLong(arg exSlice(2), args sliceInPlace(1))
                 )
             ) elseif(arg size > 1 and arg beginsWithSeq("-")) then(
                 opts append(
-                    doShort(arg slice(1), args sliceInPlace(1))
+                    doShort(arg exSlice(1), args sliceInPlace(1))
                 )
             ) elseif(allOptionsFirst) then(
                 break
@@ -276,7 +276,7 @@ Object do(
     getopt := method(
         args := call evalArgs
         GetOpt performWithArgList(
-            "with", args slice(0, call argCount - 1)
+            "with", args exSlice(0, call argCount - 1)
         ) getopt(args last)
     ) doc(
         """
@@ -290,7 +290,7 @@ Object do(
     getoptGNU := method(
         args := call evalArgs
         GetOpt performWithArgList(
-            "with", args slice(0, call argCount - 1)
+            "with", args exSlice(0, call argCount - 1)
         ) getoptGNU(args last)
     ) doc(
         """
