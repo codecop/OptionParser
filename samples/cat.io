@@ -1,7 +1,7 @@
 #!/usr/bin/env io
 # -*- coding: utf-8 -*-
 
-Importer addSearchPath("..")
+Importer addSearchPath("../io")
 
 cat := method(
     parser := OptionParser with(
