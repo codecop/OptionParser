@@ -11,6 +11,8 @@ Sequence do(
     )
 )
 
+//metadoc Option category API
+//metadoc Option description Option object.
 Option := List clone do(
     short       := method(at(0))
     long        := method(at(1))
@@ -52,7 +54,7 @@ Option := List clone do(
              .. wrap(description, "") trim(80 - max - 7) \
              .. wrap(default, " (default: ", ")")
     )
-) doc("Option object.")
+)
 
 
 OptionList := List clone do(
@@ -64,6 +66,36 @@ OptionList := List clone do(
     )
 )
 
+//metadoc OptionParser category API
+/*metadoc OptionParser description
+         A command line parser object for Io, which 
+         hopefully makes writing command line tools a little easier.
+
+         If you don't feel like using a `command()` shortcut, there's a more verbose, but yet more flexible
+         way of adding option parsing functionality to your script. First, you need to clone `OptionParser` 
+         object with a list of options you want recognized and then manually call `OptionParser parse()` 
+         later in your code.
+
+         Example:
+         <pre>
+         cat := method(
+             parser := OptionParser with(
+                 list("n", "number", false, "show line numbers")
+             ) setDescription(
+                 "A very simplified version of Unix `cat` command."
+             ) setUsage("[-n] FILE")            
+     
+             args := System args rest
+             opts := parser parse(args, true)
+             if(opts at("help"),
+                 parser help
+             ,
+                 file := File with(args first)
+                 ...
+             )
+         )
+         </pre>
+*/
 OptionParser := Object clone do(
     description ::= "(no description availible)"
     usage ::= ""
@@ -74,27 +106,32 @@ OptionParser := Object clone do(
         )
     )
 
-    with := method(
-        parser := self clone
-        parser options appendSeq(
-            call evalArgs map(option, Option performWithArgList("with", option))
-        )
-        parser
-    ) doc(
-        """
+    /*doc OptionParser with
         Creates a new OptionParser object with a given option list. Each option
         is defined by a list of four arguments: short name (ex. "d"), long name
         (ex. "debug"), default value (ex. true) and the description string,
         used for help output.
 
         Example:
+        <pre>
         Io> OptionParser with(
             list("a", "arg", 20, "an example argument")
             list("d", "debug", nil, "show debug output")
         )
-        """
+        </pre>
+    */
+    with := method(
+        parser := self clone
+        parser options appendSeq(
+            call evalArgs map(option, Option performWithArgList("with", option))
+        )
+        parser
     )
 
+    /*doc OptionParser help
+        Outputs a help string, using `description`, `usage` and a list of `options` the parser
+        was initialized with.
+    */
     help := method(
         if(usage size,
             usage asMutable replaceSeq(
@@ -105,8 +142,11 @@ OptionParser := Object clone do(
         description println
         "\noptions:\n" println
         options println
-    ) doc("Prints out help string.")
+    )
 
+    /*doc OptionParser error
+        Prints out a given error message and exits.
+    */
     error := method(error,
         if(error,
             "Error: #{error}" interpolate
@@ -114,8 +154,17 @@ OptionParser := Object clone do(
             "Error: invalid arguments" # is it okay to have this as default?
         ) println
         System exit(1)
-    ) doc("Prints out a given error message and exits.")
+    )
 
+    /*doc OptionParser parse
+        Parses a given argument list using either getopt() if the gnu flag wasn't
+        set or getoptGNU() otherwise. Parsed option values have the same types as
+        their defaults, except for special cases (see tests). Returns a Map, where
+        the keys are option long names, and the values are the ones, returned by
+        getopt*(), backed up, by the predefined defaults.
+
+        Note: argument list is modified in place! 
+    */
     parse := method(args, gnu,
         # Extracting args from the System object if they aren't provided
         # and removing script filename from the resulting list.
@@ -163,7 +212,7 @@ OptionParser := Object clone do(
         Object perform(if(gnu, "getoptGNU", "getopt"),
             shortopts join(""), longopts, args
         ) foreach(pair,
-            # Transfering parse results to state.
+            # Transferring parse results to state.
             option := argmap at(pair at(0))
             value  := pair at(1)
 
@@ -183,13 +232,5 @@ OptionParser := Object clone do(
             )
         )
         state
-    ) doc(
-        """
-        Parses a given argument list using either getopt() if the gnu flag wasn't
-        set or getoptGNU() otherwise. Parsed option values have the same types as
-        their defaults, except for special cases (see tests). Returns a Map, where
-        the keys are option long names, and the values are the ones, returned by
-        getopt*(), backed up, by the predefined defaults.
-        """
     )
 )

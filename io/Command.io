@@ -10,6 +10,11 @@ Object do(
     )
 )
 
+//metadoc Command category API
+/*medadoc Command description
+    Command object is responsible for marshaling arguments from the command
+    line to the locals of the command body.
+*/
 Command := Object clone do(
     newSlot("body")
     newSlot("arguments")
@@ -35,13 +40,17 @@ Command := Object clone do(
         )
     )
 
+    /*doc Command createContext
+        Creating the context object, the command body will
+        be executed in. Positional arguments get binded to
+        the corresponding command arguments, f.ex.
+        <pre>
+            command(arg1, ...) and args := list(1)
+        </pre>
+        where arg1 will be set to 1, once the command is
+        executed.
+    */
     createContext := method(args, keywords,
-        # Creating the context object, the command body will
-        # be executed in. Postional arguments get binded to
-        # the corresponding command arguments, f.ex.
-        #     command(arg1, ...) and args := list(1)
-        # where arg1 will be set to 1, once the command is
-        # executed.
         context := Object clone
 
         # Adding positional ...
@@ -74,15 +83,14 @@ Command := Object clone do(
             ) doMessage(getSlot("cmd") body)
         )
     )
-) doc(
-    """
-    Command object is responsible for marshaling arguments from the command
-    line to the locals of the command body.
-    """
 )
 
+//metadoc Object category API
+/*doc Object command
+        Shortcut method, creating a Command with a given message body and arguments.
+*/
 command := method(
     body := call argAt(call argCount - 1)
     arguments := call message arguments slice(0, call argCount - 1) map(asString)
     Command clone setBody(body) setArguments(arguments)
-) doc("Shortcut method, creating a Command with a given message body and arguments.")
+)
