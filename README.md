@@ -6,7 +6,7 @@ hopefully makes writing command line tools a little easier.
 
 Command
 -------
-`Command` object is a convinient wrapper around `OptionParser`, let's get to the usage 
+`Command` object is a convenient wrapper around `OptionParser`, let's get to the usage 
 example right away, since there's not much to describe:
 
     Command
@@ -130,7 +130,7 @@ a `Map`, where the keys are option long names, and the values are the ones, retu
 __IMPORTANT__: argument list is modified __in place__! 
 
 ### OptionParser error([*message*]) ###
-If there's something wrong with the arguments, that your script has recieved, you may 
+If there's something wrong with the arguments, that your script has received, you may 
 use `OptionParser error()` method to print the error message and exit. If the message
 argument is absent `"invalid arguments"` is used.
 
